@@ -172,12 +172,22 @@ class HashMap {
         for (let i = 0; i < this.buckets.length; i++) {
             for(let j = 0; j < this.buckets[i].length; j++){
                 const item = this.buckets[i][j];
-                entries += `{${item.key}, ${item.value}}, `
+                entries += `{${item.key}, ${item.value}}, `;
             }
         }
 
         entries += ']';
         return entries;
+    }
+
+    monitoringLoad() {
+        for (let i = 0; i < this.buckets.length; i++) {
+            let entry = `[${i}]: `;
+            for(let j = 0; j < this.buckets[i].length; j++){
+                entry += '*';
+            }
+            console.log(entry);
+        }
     }
 }
 
@@ -198,9 +208,11 @@ test.set('lion', 'golden')
 console.log(test.keys());
 console.log(test.values());
 console.log(test.entries());
+test.monitoringLoad();
 
 test.set('moon', 'silver');
 
 console.log(test.keys());
 console.log(test.values());
 console.log(test.entries());
+test.monitoringLoad();
