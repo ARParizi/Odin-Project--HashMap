@@ -127,6 +127,45 @@ class HashMap {
         return size;
     }
 
+    keys() {
+        const keys = [];
+
+        for (let i = 0; i < this.buckets.length; i++) {
+            for(let j = 0; j < this.buckets[i].length; j++){
+                const item = this.buckets[i][j];
+                keys.push(item.key);
+            }
+        }
+
+        return keys;
+    }
+
+    values() {
+        const values = [];
+
+        for (let i = 0; i < this.buckets.length; i++) {
+            for(let j = 0; j < this.buckets[i].length; j++){
+                const item = this.buckets[i][j];
+                values.push(item.value);
+            }
+        }
+
+        return values;
+    }
+
+    entries() {
+        let entries = '[';
+
+        for (let i = 0; i < this.buckets.length; i++) {
+            for(let j = 0; j < this.buckets[i].length; j++){
+                const item = this.buckets[i][j];
+                entries += `{${item.key}, ${item.value}}, `
+            }
+        }
+
+        entries += ']';
+        return entries;
+    }
 }
 
 const map = new HashMap(16);
