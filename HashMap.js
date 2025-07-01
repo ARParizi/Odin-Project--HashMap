@@ -69,6 +69,26 @@ class HashMap {
         return !!this.get(key);
     }
 
+    remove(key) {
+        const hash   = this.hash(key) % this.capacity;
+        const bucket = this.buckets[hash];
+
+        for (let i = 0; i < bucket.length; i++) {
+            const item = bucket[i]; 
+            if (key === item.key) {
+                bucket.splice(i, 1);
+                return true;
+            }
+        }
+        return false;        
+    }
+
+    clear() {
+        this.buckets = [];
+        for (let i = 0; i < this.capacity; i++) 
+            this.buckets.push([]);
+    }
+
     #resize() {
         this.size = this.length();
         if (this.size + 1 < Math.floor(this.capacity * this.loadFactor))
