@@ -52,6 +52,23 @@ class HashMap {
         this.size++;
     }
 
+    get(key) {
+        const hash   = this.hash(key) % this.capacity;
+        const bucket = this.buckets[hash];
+
+        for (let i = 0; i < bucket.length; i++) {
+            const item = bucket[i]; 
+            if (key === item.key) {
+                return item.value;
+            }
+        }
+        return null;
+    }
+
+    has(key) {
+        return !!this.get(key);
+    }
+
     #resize() {
         this.size = this.length();
         if (this.size + 1 < Math.floor(this.capacity * this.loadFactor))
