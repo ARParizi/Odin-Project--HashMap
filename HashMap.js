@@ -44,12 +44,20 @@ class HashMap {
     }
 
     set(key, value) {
+        const hash   = this.hash(key) % this.capacity;
+        const bucket = this.buckets[hash];
+
+        for (let i = 0; i < bucket.length; i++) {
+            if (key === bucket[i].key) {
+                bucket[i].value = value;
+                return;
+            }
+        }
+        
         this.#resize();
-        //
-        const item = { key, value };
-        const hash = this.hash(item.key) % this.capacity;
-        this.buckets[hash].push(item);
+        this.buckets[hash].push({ key, value });
         this.size++;
+        this.length();
     }
 
     get(key) {
@@ -94,8 +102,12 @@ class HashMap {
 
     #resize() {
         this.size = this.length();
-        if (this.size + 1 < Math.floor(this.capacity * this.loadFactor))
+        if (this.size + 1 <= Math.floor(this.capacity * this.loadFactor))
             return;
+
+        console.log();
+        console.log(`Triggering hash map's growth functionality and doubling its capacity.`);
+        console.log();
 
         const newCapacity = this.capacity * 2;
         const newBuckets  = [];
@@ -122,7 +134,8 @@ class HashMap {
         }
 
         if (this.size !== size) {
-            throw new Error('Error 1 in HashMap.length()');
+            const err = `Error 1 in HashMap.length(), size = ${size}, this.size = ${this.size}`;
+            throw new Error(err);
         }
         return size;
     }
@@ -168,8 +181,26 @@ class HashMap {
     }
 }
 
-const map = new HashMap(16);
-console.log(map.hash("hello")); // Will output a consistent hash value
-console.log(map.hash("world")); // Different input, different hash
-console.log(map.buckets);
-console.log(map.length());
+const test = new HashMap(16, 0.75);
+test.set('apple', 'red');
+test.set('banana', 'yellow');
+test.set('carrot', 'orange');
+test.set('dog', 'brown');
+test.set('elephant', 'gray');
+test.set('frog', 'green');
+test.set('grape', 'purple');
+test.set('hat', 'black');
+test.set('ice cream', 'white');
+test.set('jacket', 'blue');
+test.set('kite', 'pink');
+test.set('lion', 'golden')
+
+console.log(test.keys());
+console.log(test.values());
+console.log(test.entries());
+
+test.set('moon', 'silver');
+
+console.log(test.keys());
+console.log(test.values());
+console.log(test.entries());
