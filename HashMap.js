@@ -3,6 +3,7 @@ class HashMap {
         this.capacity   = capacity;
         this.loadFactor = loadFactor;
         this.buckets    = [];
+        this.size       = 0;
         for (let i = 0; i < capacity; i++) {
             this.buckets.push([]);
         }
@@ -41,8 +42,49 @@ class HashMap {
         
         return Math.abs(hash);
     }
-    set(key, value) {
 
+    set(key, value) {
+        this.#resize();
+        //
+        const item = { key, value };
+        const hash = this.hash(item.key) % this.capacity;
+        this.buckets[hash].push(item);
+        this.size++;
+    }
+
+    #resize() {
+        this.size = this.length();
+        if (this.size + 1 < Math.floor(this.capacity * this.loadFactor))
+            return;
+
+        const newCapacity = this.capacity * 2;
+        const newBuckets  = [];
+        for (let i = 0; i < newCapacity; i++) {
+            newBuckets.push([]);
+        }
+
+        for (let i = 0; i < this.buckets.length; i++) {
+            for(let j = 0; j < this.buckets[i].length; j++){
+                const item = this.buckets[i][j];
+                const hash = this.hash(item.key) % newCapacity;
+                newBuckets[hash].push(item);
+            }
+        }
+
+        this.capacity = newCapacity;
+        this.buckets  = newBuckets;
+    }
+
+    length() {
+        let size = 0;
+        for (let i = 0; i < this.buckets.length; i++) {
+            size += this.buckets[i].length;
+        }
+
+        if (this.size !== size) {
+            throw new Error('Error 1 in HashMap.length()');
+        }
+        return size;
     }
 }
 
@@ -50,3 +92,4 @@ const map = new HashMap(16);
 console.log(map.hash("hello")); // Will output a consistent hash value
 console.log(map.hash("world")); // Different input, different hash
 console.log(map.buckets);
+console.log(map.length());
