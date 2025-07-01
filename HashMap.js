@@ -77,6 +77,7 @@ class HashMap {
             const item = bucket[i]; 
             if (key === item.key) {
                 bucket.splice(i, 1);
+                this.size--;
                 return true;
             }
         }
@@ -87,6 +88,8 @@ class HashMap {
         this.buckets = [];
         for (let i = 0; i < this.capacity; i++) 
             this.buckets.push([]);
+
+        this.size = 0;
     }
 
     #resize() {
@@ -123,6 +126,7 @@ class HashMap {
         }
         return size;
     }
+
 }
 
 const map = new HashMap(16);
